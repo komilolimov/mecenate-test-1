@@ -1,22 +1,20 @@
-
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react-lite';
-
 
 import { Tabs } from '../components/ui/Tabs';
 import { StatePlaceholder } from '../components/ui/StatePlaceholder';
 import { PostCard } from '../features/feed/components/PostCard';
 
-
 import { feedStore } from '../store/feedStore';
 import { usePosts } from '../features/feed/hooks/usePosts';
-import { theme } from '../theme/tokens';
+import { useAppTheme } from '../theme/useAppTheme';
+import { useLikePost } from '../features/feed/hooks/useLikePost';
 
 export const FeedScreen = observer(() => {
-
   const currentTier = feedStore.activeTier;
-  
+  const theme = useAppTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
   const {
     data,
@@ -28,15 +26,14 @@ export const FeedScreen = observer(() => {
     refetch,
     isRefetching,
   } = usePosts(currentTier);
-
   
+  const { mutate: likePost } = useLikePost();
+
   const posts = data?.pages.flatMap((page) => page.posts) || [];
   const isEmpty = !isLoading && !isError && posts.length === 0;
 
-
-  const handleLikePress = (id: string) => console.log('Лайк:', id);
+  const handleLikePress = (id: string) => likePost(id);
   const handleCommentPress = (id: string) => console.log('Коммент:', id);
-
 
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
@@ -45,12 +42,10 @@ export const FeedScreen = observer(() => {
 
   return (
     <View style={styles.container}>
-  
       <Tabs 
         activeTab={currentTier} 
         onTabChange={feedStore.setTier} 
       />
-
 
       {isLoading ? (
         <View style={styles.centerContainer}>
@@ -95,7 +90,7 @@ export const FeedScreen = observer(() => {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,

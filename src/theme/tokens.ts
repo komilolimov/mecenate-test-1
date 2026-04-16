@@ -1,14 +1,25 @@
-export const colors = {
+export const lightColors = {
+  primary: '#5C33FF',
+  background: '#FFFFFF',
+  surface: '#F2F2F7',
+  textPrimary: '#000000',
+  textSecondary: '#8E8E93',
+  likeHeart: '#FF3B30',
+  overlay: 'rgba(0, 0, 0, 0.4)',
+};
+
+export const darkColors = {
   primary: '#5C33FF',
   background: '#121212',
   surface: '#1E1E1E',
-  
   textPrimary: '#FFFFFF',
-  textSecondary: '#8E8E93', 
-  
-  likeHeart: '#FF3B30', 
-  overlay: 'rgba(0, 0, 0, 0.7)', 
+  textSecondary: '#8E8E93',
+  likeHeart: '#FF3B30',
+  overlay: 'rgba(0, 0, 0, 0.7)',
 };
+
+// Fallback to prevent crashes if something still imports it
+export const colors = darkColors;
 
 export const spacing = {
   xs: 4,
@@ -39,7 +50,7 @@ export const typography = {
 };
 
 export const theme = {
-  colors,
+  colors: darkColors,
   spacing,
   radius,
   typography,

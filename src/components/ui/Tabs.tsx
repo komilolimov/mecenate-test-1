@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { theme } from '../../theme/tokens';
 import { FeedTier } from '../../store/feedStore';
+import { useAppTheme } from '../../theme/useAppTheme';
 
 interface TabsProps {
   activeTab: FeedTier;
@@ -9,6 +9,9 @@ interface TabsProps {
 }
 
 export const Tabs = ({ activeTab, onTabChange }: TabsProps) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   const tabs: { id: FeedTier; label: string }[] = [
     { id: 'all', label: 'Все' },
     { id: 'free', label: 'Бесплатные' },
@@ -37,7 +40,7 @@ export const Tabs = ({ activeTab, onTabChange }: TabsProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.surface,
@@ -61,6 +64,6 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
   },
   activeTabText: {
-    color: theme.colors.textPrimary,
+    color: '#FFFFFF',
   },
 });

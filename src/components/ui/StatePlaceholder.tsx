@@ -1,8 +1,8 @@
 // src/components/ui/StatePlaceholder.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Button } from './Button';
-import { theme } from '../../theme/tokens';
+import { useAppTheme } from '../../theme/useAppTheme';
 
 interface StatePlaceholderProps {
   title: string;
@@ -11,6 +11,9 @@ interface StatePlaceholderProps {
 }
 
 export const StatePlaceholder = ({ title, buttonText, onButtonPress }: StatePlaceholderProps) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   return (
     <View style={styles.container}>
       {/* Заглушка вместо Аксолотля (пока ты не добавишь картинку в assets) */}
@@ -25,7 +28,7 @@ export const StatePlaceholder = ({ title, buttonText, onButtonPress }: StatePlac
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

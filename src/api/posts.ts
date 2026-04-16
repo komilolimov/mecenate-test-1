@@ -28,3 +28,12 @@ export const fetchPosts = async ({ pageParam, tier }: FetchPostsParams) => {
 
   return response.data.data; 
 };
+
+export const toggleLikePost = async (postId: string) => {
+  // Если у тебя настроен реальный эндпоинт, раскомментируй код ниже:
+  // const response = await apiClient.post(`/posts/${postId}/like`);
+  // return response.data;
+  
+  // Пока возвращаем фейковый успешный ответ с задержкой 300мс
+  return new Promise((resolve) => setTimeout(resolve, 300));
+};

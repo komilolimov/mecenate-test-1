@@ -1,14 +1,13 @@
 // src/features/feed/components/PostCard.tsx
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Post } from '../../../api/types';
-import { theme } from '../../../theme/tokens';
+import { useAppTheme } from '../../../theme/useAppTheme';
 // Импортируем нашу кастомную кнопку для заглушки платного поста
 import { Button } from '../../../components/ui/Button';
 import LikeIcon from '../../../components/icons/LikeIcon';
 import CommentIcon from '../../../components/icons/CommentIcon';
-
 
 interface PostCardProps {
   post: Post;
@@ -18,6 +17,8 @@ interface PostCardProps {
 
 export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const theme = useAppTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   
   const isPaid = post.tier === 'paid';
   const screenWidth = Dimensions.get('window').width;
@@ -77,7 +78,7 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
       )}
 
       {/* 4. Подвал (Счетчики лайков и комментариев) */}
-      <View style={styles.footer}>
+      <View style={[styles.footer, isPaid && { paddingTop: theme.spacing.l }]}>
         <TouchableOpacity 
           style={[styles.actionButton, post.isLiked && styles.actionButtonActive]} 
           onPress={() => onLikePress(post.id)}
@@ -104,7 +105,7 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     backgroundColor: theme.colors.background, 
     marginBottom: theme.spacing.m,
