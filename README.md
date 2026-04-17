@@ -15,7 +15,7 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone <ВАША_ССЫЛКА_НА_GITHUB>
+   git clone https://github.com/komilolimov/mecenate-test-1.git
 
 
 
