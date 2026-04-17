@@ -1,8 +1,7 @@
-// src/components/ui/StatePlaceholder.tsx
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Button } from './Button';
-import { useAppTheme } from '../../theme/useAppTheme';
+import { useAppTheme } from '../theme/useAppTheme';
 
 interface StatePlaceholderProps {
   title: string;
@@ -16,8 +15,11 @@ export const StatePlaceholder = ({ title, buttonText, onButtonPress }: StatePlac
 
   return (
     <View style={styles.container}>
-      {/* Заглушка вместо Аксолотля (пока ты не добавишь картинку в assets) */}
-      <View style={styles.imagePlaceholder} />
+      <Image 
+        source={require('../../../assets/axolotl.png')} 
+        style={styles.image} 
+        resizeMode="contain"
+      />
       
       <Text style={styles.title}>{title}</Text>
       
@@ -36,11 +38,9 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
     backgroundColor: theme.colors.background,
   },
-  imagePlaceholder: {
+  image: {
     width: 150,
     height: 150,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.l,
     marginBottom: theme.spacing.l,
   },
   title: {

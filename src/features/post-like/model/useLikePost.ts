@@ -1,15 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toggleLikePost } from '../api/toggleLikePost';
 
 export const useLikePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (postId: string) => {
-      // Имитация API запроса
-      return new Promise((resolve) => setTimeout(resolve, 500));
-    },
+    mutationFn: toggleLikePost,
     onMutate: async (postId) => {
-      // Оптимистичное обновление UI
       await queryClient.cancelQueries({ queryKey: ['posts'] });
 
       const previousPosts = queryClient.getQueryData(['posts']);
@@ -38,14 +35,11 @@ export const useLikePost = () => {
       return { previousPosts };
     },
     onError: (err, newTodo, context) => {
-      // Возврат к предыдущему состоянию в случае ошибки
       if (context?.previousPosts) {
         queryClient.setQueriesData({ queryKey: ['posts'] }, context.previousPosts);
       }
     },
     onSettled: () => {
-      // Инвалидация кэша для синхронизации с сервером
-      // queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   });
 };

@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchPosts } from '../../../api/posts';
-import { FeedTier } from '../../../store/feedStore';
+import { fetchPosts } from '../api/fetchPosts';
+import { FeedTier } from '../../../shared/api/types';
 
 export const usePosts = (tier: FeedTier) => {
   return useInfiniteQuery({
@@ -10,5 +10,6 @@ export const usePosts = (tier: FeedTier) => {
     getNextPageParam: (lastPage) => {
       return lastPage.hasMore ? lastPage.nextCursor : undefined;
     },
+    retry: false,
   });
 };

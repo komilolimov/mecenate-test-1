@@ -1,7 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-
-
-export type FeedTier = 'all' | 'free' | 'paid';
+import { FeedTier } from '../../../shared/api/types';
 
 class FeedStore {
   activeTier: FeedTier = 'all';

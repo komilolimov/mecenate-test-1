@@ -1,3 +1,5 @@
+export type FeedTier = 'all' | 'free' | 'paid';
+
 export interface Author {
   id: string;
   username: string;

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { FeedTier } from '../../store/feedStore';
-import { useAppTheme } from '../../theme/useAppTheme';
+import { FeedTier } from '../api/types';
+import { useAppTheme } from '../theme/useAppTheme';
 
 interface TabsProps {
   activeTab: FeedTier;

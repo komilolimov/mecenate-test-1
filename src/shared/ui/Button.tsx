@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useAppTheme } from '../../theme/useAppTheme';
+import { useAppTheme } from '../theme/useAppTheme';
 
 interface ButtonProps {
   title: string;

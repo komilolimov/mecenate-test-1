@@ -2,12 +2,11 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { Post } from '../../../api/types';
-import { useAppTheme } from '../../../theme/useAppTheme';
-// Импортируем нашу кастомную кнопку для заглушки платного поста
-import { Button } from '../../../components/ui/Button';
-import LikeIcon from '../../../components/icons/LikeIcon';
-import CommentIcon from '../../../components/icons/CommentIcon';
+import { Post } from '../../../shared/api/types';
+import { useAppTheme } from '../../../shared/theme/useAppTheme';
+import { Button } from '../../../shared/ui/Button';
+import LikeIcon from '../../../shared/ui/icons/LikeIcon';
+import CommentIcon from '../../../shared/ui/icons/CommentIcon';
 
 interface PostCardProps {
   post: Post;
@@ -23,19 +22,15 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
   const isPaid = post.tier === 'paid';
   const screenWidth = Dimensions.get('window').width;
 
-  // Если текст длиннее 120 символов и карточка не развернута, показываем превью
   const shouldShowMoreButton = post.body && post.body.length > 120;
   const displayText = isExpanded ? post.body : post.preview;
 
   return (
     <View style={styles.container}>
-      {/* 1. Шапка (Автор) */}
       <View style={styles.header}>
         <Image source={{ uri: post.author.avatarUrl }} style={styles.avatar} />
         <Text style={styles.authorName}>{post.author.displayName}</Text>
       </View>
-
-      {/* 2. Обложка (Изображение) */}
       <View style={styles.coverContainer}>
         <Image 
           source={{ uri: post.coverUrl }} 
@@ -43,7 +38,6 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
           resizeMode="cover"
         />
         
-        {/* Заглушка для платных постов */}
         {isPaid && (
           <BlurView intensity={80} tint="dark" style={styles.blurOverlay}>
             <View style={styles.paidContent}>
@@ -51,14 +45,13 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
               <Text style={styles.paidSubText}>Доступ откроется после доната</Text>
               <Button 
                 title="Отправить донат" 
-                onPress={() => console.log('Донат нажат')} 
+                onPress={() => {}} 
               />
             </View>
           </BlurView>
         )}
       </View>
 
-      {/* 3. Текст поста (Отображается только если пост бесплатный) */}
       {!isPaid && (
         <View style={styles.body}>
           <Text style={styles.title}>{post.title}</Text>
@@ -77,14 +70,12 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
         </View>
       )}
 
-      {/* 4. Подвал (Счетчики лайков и комментариев) */}
       <View style={[styles.footer, isPaid && { paddingTop: theme.spacing.l }]}>
         <TouchableOpacity 
           style={[styles.actionButton, post.isLiked && styles.actionButtonActive]} 
           onPress={() => onLikePress(post.id)}
           activeOpacity={0.7}
         >
-          {/* Если пост лайкнут - передаем красный цвет, иначе - серый */}
           <LikeIcon color={post.isLiked ? theme.colors.likeHeart : theme.colors.textSecondary} />
           <Text style={[styles.actionText, post.isLiked && styles.actionTextActive]}>
             {post.likesCount}
@@ -96,7 +87,6 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
           onPress={() => onCommentPress(post.id)}
           activeOpacity={0.7}
         >
-          {/* У комментариев всегда стандартный серый цвет */}
           <CommentIcon color={theme.colors.textSecondary} />
           <Text style={styles.actionText}>{post.commentsCount}</Text>
         </TouchableOpacity>

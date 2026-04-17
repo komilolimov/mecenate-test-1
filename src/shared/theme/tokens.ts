@@ -18,7 +18,6 @@ export const darkColors = {
   overlay: 'rgba(0, 0, 0, 0.7)',
 };
 
-// Fallback to prevent crashes if something still imports it
 export const colors = darkColors;
 
 export const spacing = {
