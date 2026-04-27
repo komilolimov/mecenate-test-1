@@ -6,6 +6,9 @@ import { useAppTheme, AppTheme } from '../../../shared/theme/useAppTheme';
 import { Button } from '../../../shared/ui/Button';
 import LikeIcon from '../../../shared/ui/icons/LikeIcon';
 import CommentIcon from '../../../shared/ui/icons/CommentIcon';
+import { Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { UseNavigationProp } from '../../../shared/config/navigation/types'; // Проверь правильность пути!
 
 interface PostCardProps {
   post: Post;
@@ -23,74 +26,86 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
 
   const shouldShowMoreButton = post.body && post.body.length > 120;
   const displayText = isExpanded ? post.body : post.preview;
+  const navigation = useNavigation<UseNavigationProp>();
+
+  const handlePress = () => {
+    // Переходим на экран деталей и передаем ему ID поста
+    navigation.navigate('PostDetail', { postId: post.id }); 
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Image source={{ uri: post.author.avatarUrl }} style={styles.avatar} />
-        <Text style={styles.authorName}>{post.author.displayName}</Text>
-      </View>
-      <View style={styles.coverContainer}>
-        <Image 
-          source={{ uri: post.coverUrl }} 
-          style={[styles.coverImage, { width: screenWidth }]} 
-          resizeMode="cover"
-        />
-        
-        {isPaid && (
-          <BlurView intensity={80} tint="dark" style={styles.blurOverlay}>
-            <View style={styles.paidContent}>
-              <Text style={styles.paidText}>Контент скрыт пользователем.</Text>
-              <Text style={styles.paidSubText}>Доступ откроется после доната</Text>
-              <Button 
-                title="Отправить донат" 
-                onPress={() => {}} 
-              />
-            </View>
-          </BlurView>
-        )}
-      </View>
-
-      {!isPaid && (
-        <View style={styles.body}>
-          <Text style={styles.title}>{post.title}</Text>
+    <Pressable onPress={handlePress}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          {post.author?.avatarUrl ? (
+            <Image source={{ uri: post.author.avatarUrl }} style={styles.avatar} />
+          ) : (
+            <View style={styles.avatar} />
+          )}
+          <Text style={styles.authorName}>{post.author?.displayName}</Text>
+        </View>
+        <View style={styles.coverContainer}>
+          <Image 
+            source={{ uri: post.coverUrl }} 
+            style={[styles.coverImage, { width: screenWidth }]} 
+            resizeMode="cover"
+          />
           
-          <Text style={styles.previewText} numberOfLines={isExpanded ? undefined : 3}>
-            {displayText}
-          </Text>
-          
-          {shouldShowMoreButton && (
-            <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)} activeOpacity={0.7}>
-              <Text style={styles.showMoreText}>
-                {isExpanded ? 'Скрыть' : 'Показать еще'}
-              </Text>
-            </TouchableOpacity>
+          {isPaid && (
+            <BlurView intensity={80} tint="dark" style={styles.blurOverlay}>
+              <View style={styles.paidContent}>
+                <Text style={styles.paidText}>Контент скрыт пользователем.</Text>
+                <Text style={styles.paidSubText}>Доступ откроется после доната</Text>
+                <Button 
+                  title="Отправить донат" 
+                  onPress={() => {}} 
+                />
+              </View>
+            </BlurView>
           )}
         </View>
-      )}
 
-      <View style={[styles.footer, isPaid && { paddingTop: theme.spacing.l }]}>
-        <TouchableOpacity 
-          style={[styles.actionButton, post.isLiked && styles.actionButtonActive]} 
-          onPress={() => onLikePress(post.id)}
-          activeOpacity={0.7}
-        >
-          <LikeIcon color={post.isLiked ? theme.colors.likeHeart : theme.colors.textSecondary} />
-          <Text style={[styles.actionText, post.isLiked && styles.actionTextActive]}>
-            {post.likesCount}
-          </Text>
-        </TouchableOpacity>
+        {!isPaid && (
+          <View style={styles.body}>
+            <Text style={styles.title}>{post.title}</Text>
+            
+            <Text style={styles.previewText} numberOfLines={isExpanded ? undefined : 3}>
+              {displayText}
+            </Text>
+            
+            {shouldShowMoreButton && (
+              <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)} activeOpacity={0.7}>
+                <Text style={styles.showMoreText}>
+                  {isExpanded ? 'Скрыть' : 'Показать еще'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
 
-        <TouchableOpacity 
-          style={styles.actionButton}
-          onPress={() => onCommentPress(post.id)}
-          activeOpacity={0.7}
-        >
-          <CommentIcon color={theme.colors.textSecondary} />
-          <Text style={styles.actionText}>{post.commentsCount}</Text>
-        </TouchableOpacity>
+        <View style={[styles.footer, isPaid && { paddingTop: theme.spacing.l }]}>
+          <TouchableOpacity 
+            style={[styles.actionButton, post.isLiked && styles.actionButtonActive]} 
+            onPress={() => onLikePress(post.id)}
+            activeOpacity={0.7}
+          >
+            <LikeIcon color={post.isLiked ? theme.colors.likeHeart : theme.colors.textSecondary} />
+            <Text style={[styles.actionText, post.isLiked && styles.actionTextActive]}>
+              {post.likesCount}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => onCommentPress(post.id)}
+            activeOpacity={0.7}
+          >
+            <CommentIcon color={theme.colors.textSecondary} />
+            <Text style={styles.actionText}>{post.commentsCount}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
