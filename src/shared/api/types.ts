@@ -32,3 +32,27 @@ export interface PostsResponse {
     hasMore: boolean;
   };
 }
+
+export interface PostDetailResponse {
+  ok: boolean;
+  data: Post;
+}
+
+export interface Comment {
+  id: string;
+  postId: string;
+  author: Author;
+  text: string;
+  createdAt: string;
+  likesCount: number;
+  isLiked: boolean;
+}
+
+export interface CommentsResponse {
+  ok: boolean;
+  data: {
+    comments: Comment[];
+    nextCursor: string | null;
+    hasMore: boolean;
+  };
+}

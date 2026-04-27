@@ -6,6 +6,7 @@ export const lightColors = {
   textSecondary: '#8E8E93',
   likeHeart: '#FF3B30',
   overlay: 'rgba(0, 0, 0, 0.4)',
+  border: '#E5E5EA',
 };
 
 export const darkColors = {
@@ -16,6 +17,7 @@ export const darkColors = {
   textSecondary: '#8E8E93',
   likeHeart: '#FF3B30',
   overlay: 'rgba(0, 0, 0, 0.7)',
+  border: '#2C2C2E',
 };
 
 export const colors = darkColors;
