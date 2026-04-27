@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useAppTheme } from '../theme/useAppTheme';
+import { useAppTheme, AppTheme } from '../theme/useAppTheme';
 
 interface ButtonProps {
   title: string;
@@ -28,7 +28,7 @@ export const Button = ({ title, onPress, isLoading = false }: ButtonProps) => {
   );
 };
 
-const createStyles = (theme: any) => StyleSheet.create({
+const createStyles = (theme: AppTheme) => StyleSheet.create({
   button: {
     height: 48,
     backgroundColor: theme.colors.primary,

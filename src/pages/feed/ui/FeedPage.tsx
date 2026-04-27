@@ -8,7 +8,7 @@ import { PostCard } from '../../../entities/post/ui/PostCard';
 
 import { feedStore } from '../../../features/feed-filter/model/feedStore';
 import { usePosts } from '../../../entities/post/model/usePosts';
-import { useAppTheme } from '../../../shared/theme/useAppTheme';
+import { useAppTheme, AppTheme } from '../../../shared/theme/useAppTheme';
 import { useLikePost } from '../../../features/post-like/model/useLikePost';
 
 export const FeedPage = observer(() => {
@@ -92,7 +92,7 @@ export const FeedPage = observer(() => {
   );
 });
 
-const createStyles = (theme: any) => StyleSheet.create({
+const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,

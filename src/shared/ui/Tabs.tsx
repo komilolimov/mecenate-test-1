@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FeedTier } from '../api/types';
-import { useAppTheme } from '../theme/useAppTheme';
+import { useAppTheme, AppTheme } from '../theme/useAppTheme';
 
 interface TabsProps {
   activeTab: FeedTier;
@@ -40,7 +40,7 @@ export const Tabs = ({ activeTab, onTabChange }: TabsProps) => {
   );
 };
 
-const createStyles = (theme: any) => StyleSheet.create({
+const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.surface,

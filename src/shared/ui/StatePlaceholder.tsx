@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Button } from './Button';
-import { useAppTheme } from '../theme/useAppTheme';
+import { useAppTheme, AppTheme } from '../theme/useAppTheme';
 
 interface StatePlaceholderProps {
   title: string;
@@ -30,7 +30,7 @@ export const StatePlaceholder = ({ title, buttonText, onButtonPress }: StatePlac
   );
 };
 
-const createStyles = (theme: any) => StyleSheet.create({
+const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

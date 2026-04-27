@@ -7,7 +7,7 @@ interface FetchPostsParams {
 }
 
 export const fetchPosts = async ({ pageParam, tier }: FetchPostsParams) => {
-  const params: Record<string, any> = {
+  const params: { limit: number; cursor?: string; tier?: FeedTier } = {
     limit: 10
   };
 

@@ -1,9 +1,8 @@
-// src/features/feed/components/PostCard.tsx
 import React, { useState, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Post } from '../../../shared/api/types';
-import { useAppTheme } from '../../../shared/theme/useAppTheme';
+import { useAppTheme, AppTheme } from '../../../shared/theme/useAppTheme';
 import { Button } from '../../../shared/ui/Button';
 import LikeIcon from '../../../shared/ui/icons/LikeIcon';
 import CommentIcon from '../../../shared/ui/icons/CommentIcon';
@@ -95,7 +94,7 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
   );
 };
 
-const createStyles = (theme: any) => StyleSheet.create({
+const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     backgroundColor: theme.colors.background, 
     marginBottom: theme.spacing.m,

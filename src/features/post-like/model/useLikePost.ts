@@ -1,5 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, InfiniteData } from '@tanstack/react-query';
 import { toggleLikePost } from '../api/toggleLikePost';
+import { PostsResponse, Post } from '../../../shared/api/types';
 
 export const useLikePost = () => {
   const queryClient = useQueryClient();
@@ -11,18 +12,18 @@ export const useLikePost = () => {
 
       const previousPosts = queryClient.getQueryData(['posts']);
 
-      queryClient.setQueriesData({ queryKey: ['posts'] }, (old: any) => {
+      queryClient.setQueriesData<InfiniteData<PostsResponse['data']>>({ queryKey: ['posts'] }, (old) => {
         if (!old) return old;
 
         return {
           ...old,
-          pages: old.pages.map((page: any) => ({
+          pages: old.pages.map((page) => ({
             ...page,
-            posts: page.posts.map((post: any) => {
+            posts: page.posts.map((post) => {
               if (post.id === postId) {
                 return {
                   ...post,
-                  likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+                  likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1,
                   isLiked: !post.isLiked,
                 };
               }
