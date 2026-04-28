@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { useQueryClient, InfiniteData } from '@tanstack/react-query';
-// Импортируй свои типы ответов (проверь пути!)
 import { PostDetailResponse, CommentsResponse, Comment, Post } from '../../../shared/api/types'; 
-// Импортируй свой способ получения токена, например:
-// import { authStore } from '../../../entities/auth/model/authStore';
 
 export const usePostRealtime = (postId: string) => {
   const queryClient = useQueryClient();
@@ -11,15 +8,12 @@ export const usePostRealtime = (postId: string) => {
   useEffect(() => {
     if (!postId) return;
 
-    // ВАЖНО: Замени это на реальное получение твоего UUID токена
-    // const token = authStore.token; 
-    const token = '550e8400-e29b-41d4-a716-446655440000'; // Временная заглушка, поставь свой UUID!
+    const token = '550e8400-e29b-41d4-a716-446655440000';
 
     const wsUrl = `wss://k8s.mectest.ru/test-app/ws?token=${token}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
-      // Подключение установлено
     };
 
     ws.onmessage = (event) => {
@@ -29,7 +23,6 @@ export const usePostRealtime = (postId: string) => {
 
         type FlexiblePostData = { data: { post: Post } } | { data: Post };
 
-        // 1. МАГИЯ: Реалтайм лайки (like_updated)
         if (message.type === 'like_updated' && message.postId === postId) {
           queryClient.setQueryData<FlexiblePostData | undefined>(['post', postId], (oldData) => {
             if (!oldData || !oldData.data) return oldData;
@@ -39,7 +32,7 @@ export const usePostRealtime = (postId: string) => {
 
             const newPost: Post = {
               ...targetPost,
-              likesCount: Number(message.likesCount), // Точная цифра из сокета
+              likesCount: Number(message.likesCount),
             };
 
             return {
@@ -49,10 +42,8 @@ export const usePostRealtime = (postId: string) => {
           });
         }
 
-        // 2. МАГИЯ: Реалтайм новые комментарии (comment_added)
         if (message.type === 'comment_added' && message.postId === postId) {
           
-          // 2.1 Обновляем счетчик комментариев
           queryClient.setQueryData<FlexiblePostData | undefined>(['post', postId], (oldData) => {
             if (!oldData || !oldData.data) return oldData;
             
@@ -70,7 +61,6 @@ export const usePostRealtime = (postId: string) => {
             } as FlexiblePostData;
           });
 
-          // 2.2 Добавляем комментарий в список
           queryClient.setQueryData<InfiniteData<CommentsResponse> | undefined>(['post', postId, 'comments'], (oldData) => {
             if (!oldData) return oldData;
             const newPages = [...oldData.pages];
@@ -89,17 +79,14 @@ export const usePostRealtime = (postId: string) => {
           });
         }
       } catch (error) {
-        console.error('Ошибка парсинга WS сообщения:', error);
       }
     };
 
     ws.onclose = () => {
-      // WebSocket отключен
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket Ошибка:', error);
-    }
+    };
 
     return () => {
       ws.close();

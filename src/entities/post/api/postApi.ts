@@ -1,12 +1,10 @@
 import { apiClient } from '../../../shared/api/client';
 import { Post, Comment } from '../../../shared/api/types';
 
-// Ответ API для деталей поста
 export interface PostDetailResponse {
   data: Post;
 }
 
-// Ответ API для комментариев
 export interface CommentsResponse {
   data: {
     comments: Comment[];
@@ -21,7 +19,6 @@ export interface SendCommentPayload {
 export interface SendCommentResponse {
   data: Comment;
 }
-
 
 export const fetchPostDetail = async (postId: string): Promise<PostDetailResponse> => {
   const response = await apiClient.get(`/posts/${postId}`);

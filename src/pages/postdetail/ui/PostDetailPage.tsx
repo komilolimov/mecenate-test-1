@@ -30,10 +30,6 @@ import { CommentIcon } from '../../../shared/ui/icons/CommentIcon';
 import { SendIcon } from '../../../shared/ui/icons/SendIcon';
 
 
-// ==========================================
-// 1. Изолированный Компонент Комментария
-// Передаем theme через пропсы
-// ==========================================
 const CommentItem = React.memo(({ item, styles, theme }: { item: Comment, styles: Styles, theme: AppTheme }) => {
   return (
     <View style={styles.commentItem}>
@@ -60,10 +56,6 @@ const CommentItem = React.memo(({ item, styles, theme }: { item: Comment, styles
   );
 });
 
-// ==========================================
-// 2. Изолированная Шапка Поста (Header)
-// Передаем theme через пропсы
-// ==========================================
 const PostHeader = React.memo(({ post, onLike, styles, theme }: { post: Post, onLike: () => void, styles: Styles, theme: AppTheme }) => {
   return (
     <View style={styles.headerContainer}>
@@ -110,9 +102,6 @@ const PostHeader = React.memo(({ post, onLike, styles, theme }: { post: Post, on
   );
 });
 
-// ==========================================
-// 3. Изолированный Инпут Комментариев
-// ==========================================
 const CommentInputBox = React.memo(({ postId, styles, theme }: { postId: string, styles: Styles, theme: AppTheme }) => {
   const [commentText, setCommentText] = useState('');
   const { mutate: sendComment, isPending: isSending } = useSendComment(postId);
@@ -159,9 +148,6 @@ const CommentInputBox = React.memo(({ postId, styles, theme }: { postId: string,
   );
 });
 
-// ==========================================
-// 4. Главный Экран
-// ==========================================
 export const PostDetailPage = () => {
   const route = useRoute<PostDetailRouteProp>();
   const navigation = useNavigation();
@@ -172,9 +158,9 @@ export const PostDetailPage = () => {
 useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: {
-        backgroundColor: theme.colors.background, // <-- Вернули эту строку
-        shadowColor: 'transparent', // Убираем полоску тени на iOS
-        elevation: 0,               // Убираем тень на Android
+        backgroundColor: theme.colors.background,
+        shadowColor: 'transparent',
+        elevation: 0,
       },
       headerTintColor: theme.colors.textPrimary,
       headerTitleStyle: {
@@ -250,9 +236,6 @@ useLayoutEffect(() => {
   );
 };
 
-// ==========================================
-// 5. Стили
-// ==========================================
 type Styles = ReturnType<typeof createStyles>;
 const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {

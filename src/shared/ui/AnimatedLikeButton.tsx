@@ -15,12 +15,10 @@ interface Props {
 
 export const AnimatedLikeButton = ({ isLiked, likesCount, onPress, size = 'large' }: Props) => {
   const theme = useAppTheme();
-  // Используем встроенный Animated
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (isLiked) {
-      // Анимация пульсации: увеличиваем до 1.3, затем плавно возвращаем к 1
       Animated.sequence([
         Animated.spring(scale, {
           toValue: 1.3,
@@ -44,7 +42,6 @@ export const AnimatedLikeButton = ({ isLiked, likesCount, onPress, size = 'large
   }, [isLiked, scale]);
 
   const handlePress = () => {
-    // Оставляем тактильный отклик (вибрацию)
     Haptics.impactAsync(
       isLiked ? Haptics.ImpactFeedbackStyle.Light : Haptics.ImpactFeedbackStyle.Medium
     );

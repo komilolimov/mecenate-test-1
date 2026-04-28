@@ -17,7 +17,6 @@ export const useToggleLike = (postId: string) => {
       const previousPost = queryClient.getQueryData<FlexiblePostData>(['post', postId]);
 
       queryClient.setQueryData<FlexiblePostData | undefined>(['post', postId], (oldData) => {
-        // Защита от краша, если кэш пуст
         if (!oldData || !oldData.data) {
           return oldData;
         }
@@ -25,7 +24,6 @@ export const useToggleLike = (postId: string) => {
         const isWrapped = 'post' in oldData.data;
         const targetPost = isWrapped ? (oldData.data as { post: Post }).post : (oldData.data as Post);
 
-        // Защита от краша, если поста внутри нет
         if (!targetPost) return oldData;
 
         const newPost = {
@@ -45,13 +43,11 @@ export const useToggleLike = (postId: string) => {
       return { previousPost };
     },
     onError: (err, variables, context) => {
-      console.error('❌ Ошибка при лайке:', err);
       if (context?.previousPost) {
         queryClient.setQueryData(['post', postId], context.previousPost);
       }
     },
     onSettled: () => {
-      // Синхронизируемся с сервером в самом конце
       queryClient.invalidateQueries({ queryKey: ['post', postId] });
     },
   });
