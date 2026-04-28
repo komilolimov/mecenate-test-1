@@ -1,35 +1,33 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../../shared/api/client';
+import { PostDetailResponse, Post } from '../../../shared/api/types';
 
 export const useToggleLike = (postId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
-      console.log('🚀 Отправляем POST запрос лайка на сервер...');
       const response = await apiClient.post(`/posts/${postId}/like`);
       return response.data;
     },
     onMutate: async () => {
-      console.log('✨ onMutate: начинаем оптимистичное обновление...');
       await queryClient.cancelQueries({ queryKey: ['post', postId] });
       
-      const previousPost = queryClient.getQueryData(['post', postId]);
+      type FlexiblePostData = { data: { post: Post } } | { data: Post };
+      const previousPost = queryClient.getQueryData<FlexiblePostData>(['post', postId]);
 
-      queryClient.setQueryData(['post', postId], (oldData: any) => {
+      queryClient.setQueryData<FlexiblePostData | undefined>(['post', postId], (oldData) => {
         // Защита от краша, если кэш пуст
         if (!oldData || !oldData.data) {
-          console.log('⚠️ Кэш пуст, пропускаем оптимистичное обновление');
           return oldData;
         }
 
-        const isWrapped = !!oldData.data.post;
-        const targetPost = isWrapped ? oldData.data.post : oldData.data;
+        const isWrapped = 'post' in oldData.data;
+        const targetPost = isWrapped ? (oldData.data as { post: Post }).post : (oldData.data as Post);
 
         // Защита от краша, если поста внутри нет
         if (!targetPost) return oldData;
 
-        console.log('🔄 Меняем статус лайка в кэше...');
         const newPost = {
           ...targetPost,
           isLiked: !targetPost.isLiked,
@@ -40,8 +38,8 @@ export const useToggleLike = (postId: string) => {
 
         return {
           ...oldData,
-          data: isWrapped ? { ...oldData.data, post: newPost } : newPost
-        };
+          data: isWrapped ? { post: newPost } : newPost
+        } as FlexiblePostData;
       });
 
       return { previousPost };

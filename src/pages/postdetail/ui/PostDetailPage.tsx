@@ -34,7 +34,7 @@ import { SendIcon } from '../../../shared/ui/icons/SendIcon';
 // 1. Изолированный Компонент Комментария
 // Передаем theme через пропсы
 // ==========================================
-const CommentItem = React.memo(({ item, styles, theme }: { item: Comment, styles: any, theme: AppTheme }) => {
+const CommentItem = React.memo(({ item, styles, theme }: { item: Comment, styles: Styles, theme: AppTheme }) => {
   return (
     <View style={styles.commentItem}>
       {item.author?.avatarUrl ? (
@@ -64,7 +64,7 @@ const CommentItem = React.memo(({ item, styles, theme }: { item: Comment, styles
 // 2. Изолированная Шапка Поста (Header)
 // Передаем theme через пропсы
 // ==========================================
-const PostHeader = React.memo(({ post, onLike, styles, theme }: { post: Post, onLike: () => void, styles: any, theme: AppTheme }) => {
+const PostHeader = React.memo(({ post, onLike, styles, theme }: { post: Post, onLike: () => void, styles: Styles, theme: AppTheme }) => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.authorSection}>
@@ -113,7 +113,7 @@ const PostHeader = React.memo(({ post, onLike, styles, theme }: { post: Post, on
 // ==========================================
 // 3. Изолированный Инпут Комментариев
 // ==========================================
-const CommentInputBox = React.memo(({ postId, styles, theme }: { postId: string, styles: any, theme: AppTheme }) => {
+const CommentInputBox = React.memo(({ postId, styles, theme }: { postId: string, styles: Styles, theme: AppTheme }) => {
   const [commentText, setCommentText] = useState('');
   const { mutate: sendComment, isPending: isSending } = useSendComment(postId);
 
@@ -195,7 +195,7 @@ useLayoutEffect(() => {
     isFetchingNextPage
   } = useComments(postId);
 
-  const post = (postDetailData?.data?.post || postDetailData?.data || postDetailData) as any as Post | undefined;
+  const post = (postDetailData?.data?.post || postDetailData?.data || postDetailData) as unknown as Post | undefined;
   const comments = commentsData?.pages.flatMap(page => page.data.comments) ?? [];
 
   const renderComment: ListRenderItem<Comment> = useCallback(({ item }) => (
@@ -253,6 +253,7 @@ useLayoutEffect(() => {
 // ==========================================
 // 5. Стили
 // ==========================================
+type Styles = ReturnType<typeof createStyles>;
 const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,

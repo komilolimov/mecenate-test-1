@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useQueryClient, InfiniteData } from '@tanstack/react-query';
 // Импортируй свои типы ответов (проверь пути!)
-import { PostDetailResponse, CommentsResponse, Comment } from '../../../shared/api/types'; 
+import { PostDetailResponse, CommentsResponse, Comment, Post } from '../../../shared/api/types'; 
 // Импортируй свой способ получения токена, например:
 // import { authStore } from '../../../entities/auth/model/authStore';
 
@@ -19,7 +19,7 @@ export const usePostRealtime = (postId: string) => {
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
-      console.log('🔗 WebSocket подключен для поста:', postId);
+      // Подключение установлено
     };
 
     ws.onmessage = (event) => {
@@ -27,23 +27,25 @@ export const usePostRealtime = (postId: string) => {
         const message = JSON.parse(event.data);
         if (message.type === 'ping') return;
 
+        type FlexiblePostData = { data: { post: Post } } | { data: Post };
+
         // 1. МАГИЯ: Реалтайм лайки (like_updated)
         if (message.type === 'like_updated' && message.postId === postId) {
-          queryClient.setQueryData(['post', postId], (oldData: any) => {
+          queryClient.setQueryData<FlexiblePostData | undefined>(['post', postId], (oldData) => {
             if (!oldData || !oldData.data) return oldData;
             
-            const isWrapped = !!oldData.data.post;
-            const targetPost = isWrapped ? oldData.data.post : oldData.data;
+            const isWrapped = 'post' in oldData.data;
+            const targetPost = isWrapped ? (oldData.data as { post: Post }).post : (oldData.data as Post);
 
-            const newPost = {
+            const newPost: Post = {
               ...targetPost,
               likesCount: Number(message.likesCount), // Точная цифра из сокета
             };
 
             return {
               ...oldData,
-              data: isWrapped ? { ...oldData.data, post: newPost } : newPost
-            };
+              data: isWrapped ? { post: newPost } : newPost
+            } as FlexiblePostData;
           });
         }
 
@@ -51,25 +53,25 @@ export const usePostRealtime = (postId: string) => {
         if (message.type === 'comment_added' && message.postId === postId) {
           
           // 2.1 Обновляем счетчик комментариев
-          queryClient.setQueryData(['post', postId], (oldData: any) => {
+          queryClient.setQueryData<FlexiblePostData | undefined>(['post', postId], (oldData) => {
             if (!oldData || !oldData.data) return oldData;
             
-            const isWrapped = !!oldData.data.post;
-            const targetPost = isWrapped ? oldData.data.post : oldData.data;
+            const isWrapped = 'post' in oldData.data;
+            const targetPost = isWrapped ? (oldData.data as { post: Post }).post : (oldData.data as Post);
 
-            const newPost = {
+            const newPost: Post = {
               ...targetPost,
               commentsCount: Number(targetPost.commentsCount || 0) + 1,
             };
 
             return {
               ...oldData,
-              data: isWrapped ? { ...oldData.data, post: newPost } : newPost
-            };
+              data: isWrapped ? { post: newPost } : newPost
+            } as FlexiblePostData;
           });
 
           // 2.2 Добавляем комментарий в список
-          queryClient.setQueryData(['post', postId, 'comments'], (oldData: any) => {
+          queryClient.setQueryData<InfiniteData<CommentsResponse> | undefined>(['post', postId, 'comments'], (oldData) => {
             if (!oldData) return oldData;
             const newPages = [...oldData.pages];
             
@@ -92,7 +94,7 @@ export const usePostRealtime = (postId: string) => {
     };
 
     ws.onclose = () => {
-      console.log('🔴 WebSocket отключен');
+      // WebSocket отключен
     };
 
     ws.onerror = (error) => {
