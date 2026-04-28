@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, StyleSheet, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '../theme/useAppTheme';
+import {HeartIcon} from './icons/HeartIcon';
+import { HeartFilledIcon } from './icons/HeartFilledIcon';
+
 
 interface Props {
   isLiked: boolean;
@@ -63,10 +66,12 @@ export const AnimatedLikeButton = ({ isLiked, likesCount, onPress, size = 'large
         }
       ]}
     >
-      <Animated.View style={{ transform: [{ scale }] }}>
-        <Text style={{ fontSize: iconSize }}>
-          {isLiked ? '❤️' : '🤍'}
-        </Text>
+     <Animated.View style={{ transform: [{ scale }] }}>
+        {isLiked ? (
+          <HeartFilledIcon color="#FF2D55" />
+        ) : (
+          <HeartIcon color={theme.colors.textSecondary} />
+        )}
       </Animated.View>
       <Text 
         style={[

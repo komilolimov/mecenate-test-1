@@ -1,14 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Pressable } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { useNavigation } from '@react-navigation/native';
+
 import { Post } from '../../../shared/api/types';
 import { useAppTheme, AppTheme } from '../../../shared/theme/useAppTheme';
+import { UseNavigationProp } from '../../../shared/config/navigation/types';
+
 import { Button } from '../../../shared/ui/Button';
-import LikeIcon from '../../../shared/ui/icons/LikeIcon';
-import CommentIcon from '../../../shared/ui/icons/CommentIcon';
-import { Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { UseNavigationProp } from '../../../shared/config/navigation/types'; // Проверь правильность пути!
+import { HeartIcon } from '../../../shared/ui/icons/HeartIcon';
+import { HeartFilledIcon } from '../../../shared/ui/icons/HeartFilledIcon';
+import { CommentIcon } from '../../../shared/ui/icons/CommentIcon';
 
 interface PostCardProps {
   post: Post;
@@ -29,7 +31,6 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
   const navigation = useNavigation<UseNavigationProp>();
 
   const handlePress = () => {
-    // Переходим на экран деталей и передаем ему ID поста
     navigation.navigate('PostDetail', { postId: post.id }); 
   };
 
@@ -40,7 +41,7 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
           {post.author?.avatarUrl ? (
             <Image source={{ uri: post.author.avatarUrl }} style={styles.avatar} />
           ) : (
-            <View style={styles.avatar} />
+            <View style={styles.avatarPlaceholder} />
           )}
           <Text style={styles.authorName}>{post.author?.displayName}</Text>
         </View>
@@ -85,11 +86,17 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
 
         <View style={[styles.footer, isPaid && { paddingTop: theme.spacing.l }]}>
           <TouchableOpacity 
-            style={[styles.actionButton, post.isLiked && styles.actionButtonActive]} 
+            style={styles.actionButton} 
             onPress={() => onLikePress(post.id)}
             activeOpacity={0.7}
           >
-            <LikeIcon color={post.isLiked ? theme.colors.likeHeart : theme.colors.textSecondary} />
+            <View style={{ marginBottom: 2 }}>
+              {post.isLiked ? (
+                <HeartFilledIcon color="#FF2D55" />
+              ) : (
+                <HeartIcon color={theme.colors.textSecondary} />
+              )}
+            </View>
             <Text style={[styles.actionText, post.isLiked && styles.actionTextActive]}>
               {post.likesCount}
             </Text>
@@ -100,7 +107,9 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
             onPress={() => onCommentPress(post.id)}
             activeOpacity={0.7}
           >
-            <CommentIcon color={theme.colors.textSecondary} />
+            <View style={{ marginRight: 2 }}>
+               <CommentIcon color={theme.colors.textSecondary} />
+            </View>
             <Text style={styles.actionText}>{post.commentsCount}</Text>
           </TouchableOpacity>
         </View>
@@ -111,7 +120,6 @@ export const PostCard = ({ post, onLikePress, onCommentPress }: PostCardProps) =
 
 const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.background, 
     marginBottom: theme.spacing.m,
   },
   header: {
@@ -124,7 +132,12 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
     height: 32,
     borderRadius: theme.radius.round,
     marginRight: theme.spacing.m,
-    backgroundColor: theme.colors.surface,
+  },
+  avatarPlaceholder: {
+    width: 32,
+    height: 32,
+    borderRadius: theme.radius.round,
+    marginRight: theme.spacing.m,
   },
   authorName: {
     fontSize: theme.typography.sizes.body,
@@ -133,7 +146,6 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   },
   coverContainer: {
     height: 350,
-    backgroundColor: theme.colors.surface,
   },
   coverImage: {
     height: '100%',
@@ -146,7 +158,6 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   paidContent: {
     alignItems: 'center',
     padding: theme.spacing.xl,
-    backgroundColor: theme.colors.overlay,
     borderRadius: theme.radius.l,
   },
   paidText: {
@@ -189,14 +200,12 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.surface,
     paddingVertical: theme.spacing.s,
     paddingHorizontal: theme.spacing.m,
     borderRadius: theme.radius.round,
     marginRight: theme.spacing.m,
-  },
-  actionButtonActive: {
-    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+    borderColor: theme.colors.textSecondary, 
+    backgroundColor: theme.colors.surface, 
   },
   actionText: {
     marginLeft: theme.spacing.xs,
@@ -204,6 +213,6 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
     fontWeight: theme.typography.weights.medium,
   },
   actionTextActive: {
-    color: theme.colors.likeHeart,
+    color: '#FF2D55',
   },
 });

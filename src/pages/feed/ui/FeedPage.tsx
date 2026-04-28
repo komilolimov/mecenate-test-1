@@ -107,5 +107,5 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   },
   footerLoader: {
     marginVertical: theme.spacing.l,
-  },
+  }
 });

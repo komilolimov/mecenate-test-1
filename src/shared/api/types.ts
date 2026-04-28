@@ -35,7 +35,9 @@ export interface PostsResponse {
 
 export interface PostDetailResponse {
   ok: boolean;
-  data: Post;
+  data: {
+    post: Post;
+  };
 }
 
 export interface Comment {

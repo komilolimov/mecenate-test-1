@@ -30,7 +30,10 @@ export const Tabs = ({ activeTab, onTabChange }: TabsProps) => {
             onPress={() => onTabChange(tab.id)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.tabText, isActive && styles.activeTabText]}>
+            <Text 
+              style={[styles.tabText, isActive && styles.activeTabText]} 
+              numberOfLines={1}
+            >
               {tab.label}
             </Text>
           </TouchableOpacity>
@@ -44,23 +47,25 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.surface,
-    padding: theme.spacing.xs,
-    borderRadius: theme.radius.round,
-    marginHorizontal: theme.spacing.l,
+    padding: 8, 
+    borderRadius: 24, 
+    marginHorizontal: 16, 
     marginVertical: theme.spacing.m,
+    marginTop: 60
   },
   tabButton: {
-    flex: 1,
+    flex: 1, 
     paddingVertical: 8,
     alignItems: 'center',
-    borderRadius: theme.radius.round,
+    justifyContent: 'center',
+    borderRadius: 20,
   },
   activeTabButton: {
     backgroundColor: theme.colors.primary,
   },
   tabText: {
-    fontSize: theme.typography.sizes.body,
-    fontWeight: theme.typography.weights.medium,
+    fontSize: 13, 
+    fontWeight: '600',
     color: theme.colors.textSecondary,
   },
   activeTabText: {
